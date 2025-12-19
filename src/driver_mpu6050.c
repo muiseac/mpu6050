@@ -3973,6 +3973,10 @@ uint8_t mpu6050_read(mpu6050_handle_t *handle, int16_t (*accel_raw)[3], float (*
         count = (count < ((*len) * 12)) ? count : ((*len) * 12);                                   /* just outer buffer size */
         count = (count / 12) * 12;                                                                 /* 12 times */
         *len = count / 12;                                                                         /* set the output length */
+        if(count <= 0){
+          handle->debug_print("mpu6050: fifo count is 0\n");
+          return 1;
+        }
         res = a_mpu6050_iic_read(handle, MPU6050_REG_R_W, handle->buf, count);                     /* read data */
         if (res != 0)                                                                              /* check result */
         {
